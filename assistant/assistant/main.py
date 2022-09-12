@@ -1,5 +1,10 @@
+from notebook import Notebook
+
+
 def main():
     print("Hello! I'm personal assistant")
+    note = Notebook()
+    note.save_data()
 
 
 if __name__ == '__main__':
