@@ -35,6 +35,19 @@ class Note:
     def text_note(self, text_note: str):
         self.__text_note = text_note
 
+    def add_tag(self, value: str):
+        self.tags.append(value)
+
+    def del_tag(self, value: str):
+        self.tags.remove(value)
+
+    def change_tag(self, old_value: str, new_value: str):
+        try:
+            self.tags.remove(old_value)
+            self.tags.append(new_value)
+        except ValueError:
+            return f"{old_value} does not exists"
+
 
 class Notebook(UserDict):
     def __init__(self):
@@ -65,25 +78,39 @@ class Notebook(UserDict):
         if name in self.data:
             del self.data[name]
         else:
-            raise KeyError(f'Note "{name}" not found')
+            raise ValueError(f'Note "{name}" not found')
 
     def edit_note_text(self, name: str, text_note: str):
         if name in self.data:
             self.data[name].text_note = text_note
         else:
-            raise KeyError(f'Note "{name}" not found')
+            raise ValueError(f'Note "{name}" not found')
 
     def find_note(self, find_text: str):
         find_result = []
         for note in self.data.values():  # type: Note
             # find by name or text
             if find_text in str(note.name) or find_text in str(note.text_note):
-                find_result.append(note.name)
+                find_result.append(f'"{note.name}"')
         if len(find_result) > 0:
-            return f'Records where "{find_text}" were found: ' + ', '.join(find_result)
+            return f'Notes where "{find_text}" were found: ' + ', '.join(find_result)
         return f'"{find_text}" matches not found'
 
+    def find_note_by_tag(self, find_tag: str):
+        find_result = []
+        for note in self.data.values():  # type: Note
+            # find by name or text
+            if find_tag in note.tags:
+                find_result.append(f'"{note.name}"')
+        if len(find_result) > 0:
+            return f'Notes with tag "{find_tag}" were found: ' + ', '.join(find_result)
+        return f'Note with tag "{find_tag}" not found'
+
     def show_note(self):
+        for note in self.data.values():
+            print(note)
+
+    def show_note_by_tag(self):
         for note in self.data.values():
             print(note)
 
@@ -93,7 +120,11 @@ if __name__ == '__main__':
     my_note = Notebook()
     my_note.add_note('второй', 'вторая запись')
     my_note.edit_note_text('первый', 'перезаписаная запись')
+    my_note['первый'].add_tag('temp')
+    my_note['первый'].add_tag('first')
+    my_note['первый'].change_tag('temp', 'second')
+
     my_note.save_data()
     # my_note.show_note()
     print(my_note.find_note('з'))
-
+    print(my_note.find_note_by_tag('second'))
