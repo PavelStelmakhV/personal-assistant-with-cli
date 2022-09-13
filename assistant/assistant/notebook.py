@@ -73,16 +73,15 @@ class Notebook(UserDict):
         else:
             raise KeyError(f'Note "{name}" not found')
 
-    # def find_note(self, find_text: str):
-    #     find_result = []
-    #     for note in self.data.name():  # type: Note
-    #         # find by name or text
-    #         if find_text in str(note.name) or bool(
-    #                 list(filter(lambda x: find_text in x.value, note.phone_list))):
-    #             find_result.append(note.name)
-    #     if len(find_result) > 0:
-    #         return f'Records where "{find_text}" were found: ' + ', '.join(self.find_result)
-    #     return f'"{find_text}" matches not found'
+    def find_note(self, find_text: str):
+        find_result = []
+        for note in self.data.values():  # type: Note
+            # find by name or text
+            if find_text in str(note.name) or find_text in str(note.text_note):
+                find_result.append(note.name)
+        if len(find_result) > 0:
+            return f'Records where "{find_text}" were found: ' + ', '.join(find_result)
+        return f'"{find_text}" matches not found'
 
     def show_note(self):
         for note in self.data.values():
@@ -95,4 +94,6 @@ if __name__ == '__main__':
     my_note.add_note('второй', 'вторая запись')
     my_note.edit_note_text('первый', 'перезаписаная запись')
     my_note.save_data()
-    my_note.show_note()
+    # my_note.show_note()
+    print(my_note.find_note('з'))
+
