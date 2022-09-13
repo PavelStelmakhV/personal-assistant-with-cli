@@ -1,8 +1,6 @@
 import math
 from datetime import datetime
 
-#11111
-
 
 class Field:
     pass
@@ -17,12 +15,15 @@ class Name:
 
 class Phone:
     value = ''
+    dict_operator = ('096', '097', '098', '063', '067', '093', '050', '095', '066')
 
     def validate_phone(self, user_phone):
-        if len(user_phone) > 9 and len(user_phone) < 15:
-            return user_phone
-        else:
-            return 'None'
+        if 9 < len(user_phone) < 14:
+            if (user_phone[0:2] == '+38' and user_phone[3:5] in self.dict_operator) or \
+                    (user_phone[0:2] in self.dict_operator):
+                return user_phone
+
+        return 'None'
 
     def add(self, user_phone):
         self.value = self.validate_phone(user_phone)
@@ -60,9 +61,16 @@ class Address:
 
 class Email:
     value = ''
+    email_box_names = ('gmail.com', 'ukr.net', 'yahoo.com', 'hotmail.com')
+
+    def validate_email(self, user_email):
+        user_name, email_box = user_email.split('@')
+        if (5 < len(user_name) < 50) and (email_box in self.email_box_names):
+            return user_email
+        return 'None'
 
     def add(self, user_email):
-        self.value = user_email
+        self.value = self.validate_email(user_email)
 
 
 class Record(Field, Name, Phone, Birthday, Address, Email):
