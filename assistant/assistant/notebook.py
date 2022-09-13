@@ -16,7 +16,10 @@ class Note:
         self.__text_note = text_note
 
     def __str__(self):
-        result = f'\nNote: {self.__name}\n{self.__text_note}'
+        if self.tags is not None:
+            tag_string = '><'.join(self.tags)
+            tag_string = '<' + tag_string + '>'
+        result = f'\nNote: {self.__name}\nTag: {tag_string}\n{self.__text_note}'
         return result
 
     @property
@@ -35,13 +38,26 @@ class Note:
     def text_note(self, text_note: str):
         self.__text_note = text_note
 
+    def edit_text_note(self, new_text: str, add_text=True):
+        # new_text = input('Input text:')
+        if add_text:
+            self.text_note += new_text
+        else:
+            self.text_note = new_text
+
     def add_tag(self, value: str):
-        self.tags.append(value)
+        if not (value in self.tags):
+            self.tags.append(value)
 
     def del_tag(self, value: str):
-        self.tags.remove(value)
+        try:
+            self.tags.remove(value)
+        except ValueError:
+            return f"{value} does not exists"
 
     def change_tag(self, old_value: str, new_value: str):
+        if new_value in self.tags:
+            return f'Already have a tag <{new_value}>'
         try:
             self.tags.remove(old_value)
             self.tags.append(new_value)
@@ -82,7 +98,7 @@ class Notebook(UserDict):
 
     def edit_note_text(self, name: str, text_note: str):
         if name in self.data:
-            self.data[name].text_note = text_note
+            self.data[name].edit_text_note(text_note)
         else:
             raise ValueError(f'Note "{name}" not found')
 
@@ -111,20 +127,34 @@ class Notebook(UserDict):
             print(note)
 
     def show_note_by_tag(self):
+        result = {}
         for note in self.data.values():
-            print(note)
+            for tag in note.tags:
+                if not (tag in result):
+                    result[tag] = []
+                result[tag].append(f'"{note.name}"')
+        for key, value in result.items():
+            print(f'<{key}>: ' + ', '.join(value))
 
 
 if __name__ == '__main__':
 
-    my_note = Notebook()
-    my_note.add_note('второй', 'вторая запись')
-    my_note.edit_note_text('первый', 'перезаписаная запись')
-    my_note['первый'].add_tag('temp')
-    my_note['первый'].add_tag('first')
-    my_note['первый'].change_tag('temp', 'second')
-
-    my_note.save_data()
+    print('------ Notebook -------')
+    # my_note = Notebook()
+    # # my_note.del_note('первый')
+    # my_note.add_note('первый', 'первая запись')
+    # my_note.add_note('второй', 'вторая запись')
+    # # my_note.edit_note_text('первый', 'перезаписаная запись')
+    # my_note['первый'].add_tag('temp')
+    # my_note['первый'].add_tag('first')
+    # my_note['первый'].change_tag('temp', 'second')
+    # my_note['второй'].add_tag('second')
+    # # my_note.edit_note_text('второй', ' добавленная запись')
+    #
+    # my_note.save_data()
+    #
+    # print(my_note.find_note('з'))
+    # print(my_note.find_note_by_tag('second'))
+    # print('------------')
     # my_note.show_note()
-    print(my_note.find_note('з'))
-    print(my_note.find_note_by_tag('second'))
+    # my_note.show_note_by_tag()
