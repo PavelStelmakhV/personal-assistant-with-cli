@@ -1,4 +1,4 @@
-from setuptools import setup, find_namespace_packages, find_packages
+from setuptools import setup, find_namespace_packages
 
 setup(name='assistant',
       version='0.0.1',
@@ -8,7 +8,6 @@ setup(name='assistant',
       author_email='stelmahpv13@ukr.net, ranok.denis@gmail.com',
       license='MIT',
       packages=find_namespace_packages(),
-      packages=find_packages(),
       entry_points={'console_scripts': ['assistant=assistant.main:main']},
       classifiers=[
           "Programming Language :: Python :: 3",
