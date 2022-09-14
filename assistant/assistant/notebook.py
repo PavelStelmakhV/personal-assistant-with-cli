@@ -16,7 +16,8 @@ class Note:
         self.__text_note = text_note
 
     def __str__(self):
-        if self.tags is not None:
+        tag_string = ''
+        if len(self.tags) > 0:
             tag_string = '><'.join(self.tags)
             tag_string = '<' + tag_string + '>'
         result = f'\nNote: {self.__name}\nTag: {tag_string}\n{self.__text_note}'
@@ -54,19 +55,20 @@ class Note:
             self.tags.remove(value)
         except ValueError:
             return f"{value} does not exists"
-
-    def change_tag(self, old_value: str, new_value: str):
-        if new_value in self.tags:
-            return f'Already have a tag <{new_value}>'
-        try:
-            self.tags.remove(old_value)
-            self.tags.append(new_value)
-        except ValueError:
-            return f"{old_value} does not exists"
+    #
+    # def change_tag(self, old_value: str, new_value: str):
+    #     if new_value in self.tags:
+    #         return f'Already have a tag <{new_value}>'
+    #     try:
+    #         self.tags.remove(old_value)
+    #         self.tags.append(new_value)
+    #     except ValueError:
+    #         return f"{old_value} does not exists"
 
 
 class Notebook(UserDict):
     def __init__(self):
+        super().__init__()
         self.data = {}
         self.load_data()
 
@@ -87,8 +89,14 @@ class Notebook(UserDict):
             print("Some problems!")
 
     def add_note(self, name: str, text_note: str = None):
-        if not (name in self.data):
+        if name == '':
+            raise ValueError('Name cannot be empty')
+        if not (name in self.data.keys()):
             self.data[name] = Note(name=name, text_note=text_note)
+            input_text = input('Input text note:')
+            self.data[name].text_note = input_text
+        else:
+            raise ValueError('This name already exists')
 
     def del_note(self, name: str):
         if name in self.data:
@@ -96,9 +104,26 @@ class Notebook(UserDict):
         else:
             raise ValueError(f'Note "{name}" not found')
 
-    def edit_note_text(self, name: str, text_note: str):
-        if name in self.data:
-            self.data[name].edit_text_note(text_note)
+    def edit_note_tag(self, name: str):
+        if name in self.data.keys():
+            print(self.data[name])
+            flag = input('input add or delete tag (a/d)')
+            if flag == 'a':
+                tag = input('input new tag: ')
+                self.data[name].add_tag(tag)
+            else:
+                tag = input('input remove tag: ')
+                self.data[name].del_tag(tag)
+        else:
+            raise ValueError(f'Note "{name}" not found')
+
+    def edit_note_text(self, name: str):
+        if name in self.data.keys():
+            print(self.data[name])
+            text_note = input('>')
+            flag = input('input add or overwrite text (a/o)')
+            self.data[name].edit_text_note(text_note, add_text=False) if flag == 'o' \
+                else self.data[name].edit_text_note(text_note)
         else:
             raise ValueError(f'Note "{name}" not found')
 
@@ -106,7 +131,7 @@ class Notebook(UserDict):
         find_result = []
         for note in self.data.values():  # type: Note
             # find by name or text
-            if find_text in str(note.name) or find_text in str(note.text_note):
+            if find_text.lower() in str(note.name).lower() or find_text.lower() in str(note.text_note).lower():
                 find_result.append(f'"{note.name}"')
         if len(find_result) > 0:
             return f'Notes where "{find_text}" were found: ' + ', '.join(find_result)
@@ -117,6 +142,8 @@ class Notebook(UserDict):
         for note in self.data.values():  # type: Note
             # find by name or text
             if find_tag in note.tags:
+                find_result.append(f'"{note.name}"')
+            if find_tag == '' and len(note.tags) == 0:
                 find_result.append(f'"{note.name}"')
         if len(find_result) > 0:
             return f'Notes with tag "{find_tag}" were found: ' + ', '.join(find_result)
@@ -129,32 +156,17 @@ class Notebook(UserDict):
     def show_note_by_tag(self):
         result = {}
         for note in self.data.values():
+            if len(note.tags) == 0:
+                if not ('' in result.keys()):
+                    result[''] = []
+                result[''].append(f'"{note.name}"')
             for tag in note.tags:
-                if not (tag in result):
+                if not (tag in result.keys()):
                     result[tag] = []
                 result[tag].append(f'"{note.name}"')
         for key, value in result.items():
             print(f'<{key}>: ' + ', '.join(value))
 
 
-if __name__ == '__main__':
+this_notebook = Notebook()
 
-    print('------ Notebook -------')
-    # my_note = Notebook()
-    # # my_note.del_note('первый')
-    # my_note.add_note('первый', 'первая запись')
-    # my_note.add_note('второй', 'вторая запись')
-    # # my_note.edit_note_text('первый', 'перезаписаная запись')
-    # my_note['первый'].add_tag('temp')
-    # my_note['первый'].add_tag('first')
-    # my_note['первый'].change_tag('temp', 'second')
-    # my_note['второй'].add_tag('second')
-    # # my_note.edit_note_text('второй', ' добавленная запись')
-    #
-    # my_note.save_data()
-    #
-    # print(my_note.find_note('з'))
-    # print(my_note.find_note_by_tag('second'))
-    # print('------------')
-    # my_note.show_note()
-    # my_note.show_note_by_tag()
