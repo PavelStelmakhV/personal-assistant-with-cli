@@ -1,5 +1,6 @@
 import math
 from datetime import datetime
+from collections import UserDict
 
 
 class Field:
@@ -8,6 +9,12 @@ class Field:
 
 class Name:
     value = ''
+
+    def delete(self):
+        self.value = ''
+
+    def edit(self, text_to_edit):
+        self.value = text_to_edit
 
     def add(self, user_name):
         self.value = user_name
@@ -27,6 +34,12 @@ class Phone:
 
     def add(self, user_phone):
         self.value = self.validate_phone(user_phone)
+
+    def delete(self):
+        self.value = ''
+
+    def edit(self, text_to_edit):
+        self.value = self.validate_phone(text_to_edit)
 
 
 class Birthday:
@@ -51,12 +64,24 @@ class Birthday:
             self.datetime_value = datetime(day=1, month=1, year=1)
             self.value = ''
 
+    def delete(self):
+        self.value = ''
+
+    def edit(self, text_to_edit):
+        self.value = text_to_edit
+
 
 class Address:
     value = ''
 
     def add(self, user_address):
         self.value = user_address
+
+    def delete(self):
+        self.value = ''
+
+    def edit(self, text_to_edit):
+        self.value = text_to_edit
 
 
 class Email:
@@ -71,6 +96,12 @@ class Email:
 
     def add(self, user_email):
         self.value = self.validate_email(user_email)
+
+    def delete(self):
+        self.value = ''
+
+    def edit(self, text_to_edit):
+        self.value = self.validate_email(text_to_edit)
 
 
 class Record(Field, Name, Phone, Birthday, Address, Email):
@@ -107,3 +138,46 @@ class Record(Field, Name, Phone, Birthday, Address, Email):
         today_date = datetime.now()
         difference = today_date - self.birthday.datetime_value
         print(f'days to birthday: {int(math.fabs(difference.days))}')
+
+
+class AddressBook(UserDict, Record):
+    dict = {}
+
+    def find_by_name(self, name):
+        print(f'name: {name}')
+        print(f'\t {self.dict[name].phone.value}')
+
+    def find_by_phone(self, phone):
+        for key, value in self.dict.items():
+            if value.phone.value == phone:
+                print(f'{key}:{phone}')
+
+    def edit_email(self, user_name, new_email):
+        self.dict[user_name].email.edit(new_email)
+
+    def edit_name(self, user_name, new_name):
+        self.dict[user_name].name.edit(new_name)
+
+    def edit_phone(self, user_name, new_phone):
+        self.dict[user_name].phone.edit(new_phone)
+
+    def edit_address(self, user_name, new_address):
+        self.dict[user_name].address.edit(new_address)
+
+    def edit_birthday(self, user_name, new_birthday):
+        self.dict[user_name].birthday.edit(new_birthday)
+
+    def delete_email(self, user_name):
+        self.dict[user_name].email.delete()
+
+    def delete_name(self, user_name):
+        self.dict[user_name].name.delete()
+
+    def delete_phone(self, user_name):
+        self.dict[user_name].phone.delete()
+
+    def delete_address(self, user_name):
+        self.dict[user_name].address.delete()
+
+    def delete_birthday(self, user_name):
+        self.dict[user_name].birthday.delete()
