@@ -1,5 +1,6 @@
 from typing import Dict, Callable
 from notebook import *
+from sort import sort_files
 
 
 def input_error(func):
@@ -79,6 +80,11 @@ def error_handler(*args):
     return "Type help command for information about other commands"
 
 
+@input_error
+def sort_file_handler(argument: str) -> str:
+    return sort_files(argument)
+
+
 handlers: Dict[str, Callable] = {
     'hello': hello_handler,
     'close': exit_handler,
@@ -93,5 +99,6 @@ handlers: Dict[str, Callable] = {
     'note find': note_find_handler,
     'note show by tag': note_show_by_tag_handler,
     'note show': note_show_handler,
-    'error command': error_handler
+    'error command': error_handler,
+    'sort file': sort_file_handler
 }
