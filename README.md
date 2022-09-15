@@ -24,10 +24,10 @@
 аудіо:'.mp3', '.ogg', '.wav', '.amr'
 архівні:'.zip', '.gz', '.tar'
 
-"Асистент" можна установити як пакет Python за допомогою установочного файлу.
+"Асистент" можна установити як пакет Python через команду pip install -e  з локації файлу setup.py.
 Для запуску програми достатньо просто викликати команду "assistant" в командному рядку в будь-якому місці системи.
 
-CLI Асистент має наступні функції: додавання запису до адресної книги, видалення запису, редагування запису, виведення контактів з днями народження в задану кількість днів, додавання нотатки до записника, видалення нотатки, редагування нотатки, пошук нотатки, виведення нотатки, додавання тегу до нотатки, видалення тегу, зміна тегу, виведення нотатки за тегом, пошук нотатки затегом, сортування файлів в папці за категоріями.
+CLI Асистент має наступні функції: вітається з юзером, додавання запису до адресної книги, видалення запису, редагування запису, виведення контактів з адресної книги, виведення контактів з днями народження в задану кількість днів, додавання нотатки до записника, видалення нотатки, редагування нотатки, пошук нотатки, виведення нотатки, зміна тегу нотатки, виведення нотатки за тегом, пошук нотатки затегом, сортування файлів в папці за категоріями.
 Також, в будь-який момент доступна команда "help" яка виводить список всіх доступних команд програми з коротким їх описом.
 
 Дякуємо за Ваш вибір нашого продукту. Бажаємо приємного користування!
@@ -59,10 +59,10 @@ documents:'.doc', '.docx', '.txt', '.pdf', '.xlsx', '.pptx'
 audio:'.mp3', '.ogg', '.wav', '.amr'
 archive:'.zip', '.gz', '.tar'
 
-The "Assistant" can be installed into your python as a package using the setup file.
+The "Assistant" can be installed into your python as a package using the commant pip install -e from the setup.py file location.
 To start the program, simply type command "assistant" in the console in any place of the system.
 
-CLI Assistan has the following options: add record to the addressbook, delete record, edit record, show contacts with birthdays within a certain timeframe, add note to the notebook, delete note, edit note text, find note, show note, add tag to the note, delete tag, change tag, show note by tag, find note by tag, sort files in a folder by categories.
+CLI Assistan has the following options: welcoming the user, add record to the addressbook, delete record, edit record, search for the Record, show the Records in Addressbook, show contacts with birthdays within a certain timeframe, add note to the notebook, delete note, edit note's text, find note, show note, change tag, show note by tag, find note by tag, sort files in a folder by categories.
 Also, at any time you can use command "help" to see the list of all supported commands with their description.
 
 Thanks for downloading and enjoy using the "Assistant" by PRDD.

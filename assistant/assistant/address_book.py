@@ -181,3 +181,6 @@ class AddressBook(UserDict, Record):
 
     def delete_birthday(self, user_name):
         self.dict[user_name].birthday.delete()
+
+
+this_phonebook = AddressBook()

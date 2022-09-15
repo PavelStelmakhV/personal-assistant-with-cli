@@ -55,15 +55,6 @@ class Note:
             self.tags.remove(value)
         except ValueError:
             return f"{value} does not exists"
-    #
-    # def change_tag(self, old_value: str, new_value: str):
-    #     if new_value in self.tags:
-    #         return f'Already have a tag <{new_value}>'
-    #     try:
-    #         self.tags.remove(old_value)
-    #         self.tags.append(new_value)
-    #     except ValueError:
-    #         return f"{old_value} does not exists"
 
 
 class Notebook(UserDict):
