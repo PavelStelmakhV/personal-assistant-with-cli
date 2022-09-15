@@ -6,18 +6,6 @@ DOCUMENTS = {'.DOC', '.DOCX', '.TXT', '.PDF', '.XLSX', '.PPTX'}
 IMAGES = {'.JPEG', '.PNG', '.JPG', '.SVG'}
 VIDEO = {'.AVI', '.MP4', '.MOV', '.MKV'}
 
-# file_list = {
-#     'images': [],
-#     'documents': [],
-#     'audio': [],
-#     'video': [],
-#     'archives': [],
-#     'unknown extensions': [],
-#     'folder': []
-# }
-# known_extensions = set()
-# unknown_extensions = set()
-
 
 def folder_handling(folder: Path, file_list: dict):
     for file in folder.iterdir():

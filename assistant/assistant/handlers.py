@@ -1,4 +1,6 @@
 from typing import Dict, Callable
+
+from help_command import show_commands
 from contact_book import *
 from notebook import *
 from sort import sort_files
@@ -134,8 +136,9 @@ def sort_file_handler(argument: str) -> str:
 
 
 @input_error
-def help_handler(argument: str) -> str:
-    return sort_files(argument)
+def help_handler(*args):
+    show_commands()
+    return ''
 
 
 handlers: Dict[str, Callable] = {
