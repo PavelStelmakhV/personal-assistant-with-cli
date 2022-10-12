@@ -10,5 +10,7 @@ commands_desc = [f"<<{cmd}>> - {desc}" for cmd, desc in zip(action_commands + ['
 
 
 def show_commands():
+    result = ''
     for i in commands_desc:
-        print(i)
+        result += i + '\n'
+    return result

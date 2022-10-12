@@ -1,9 +1,9 @@
 from collections import UserDict
-from pickle import load, dump
+import pickle
 from pathlib import Path
 
 
-FILE_NAME = 'notebook.pickle'
+
 
 
 class Note:
@@ -58,65 +58,72 @@ class Note:
 
 
 class Notebook(UserDict):
-    def __init__(self):
-        super().__init__()
-        self.data = {}
-        self.load_data()
+    __path = Path('~').expanduser()
+    __file_name = __path / 'note_book.pickle'
 
-    def load_data(self):
-        path = Path('~').expanduser()
+    def __enter__(self):
+        self.__load_book()
+        return self
+
+    def __exit__(self, exc_type, exc_val, exc_tb):
+        self.__save_book()
+
+    def save_book(self):
+        self.__save_book()
+
+    # def __init__(self):
+    #     super().__init__()
+    #     self.data = {}
+    #     self.load_data()
+
+    def __load_book(self):
         try:
-            with open(path / FILE_NAME, 'rb') as fh:
-                self.data = load(fh)
+            with open(self.__file_name, 'rb') as file:
+                book = pickle.load(file)
+                self.data.update(book)
         except FileNotFoundError:
             pass
 
-    def save_data(self):
-        path = Path('~').expanduser()
+    def __save_book(self):
         try:
-            with open(path / FILE_NAME, 'wb') as fh:
-                dump(self.data, fh)
+            with open(self.__file_name, 'wb') as file:
+                pickle.dump(self.data, file, protocol=pickle.HIGHEST_PROTOCOL)
         except Exception:
-            print("Some problems!")
+            print("Some problems! Don't save notebook")
 
     def add_note(self, name: str, text_note: str = None):
         if name == '':
             raise ValueError('Name cannot be empty')
         if not (name in self.data.keys()):
             self.data[name] = Note(name=name, text_note=text_note)
-            input_text = input('Input text note:')
-            self.data[name].text_note = input_text
+            return f'Record "{name}" added to notebook'
         else:
             raise ValueError('This name already exists')
 
     def del_note(self, name: str):
         if name in self.data:
             del self.data[name]
+            return f'Record "{name}" deleted to from notebook'
         else:
             raise ValueError(f'Note "{name}" not found')
 
     def edit_note_tag(self, name: str):
-        if name in self.data.keys():
-            print(self.data[name])
-            flag = input('input add or delete tag (a/d)')
-            if flag == 'a':
-                tag = input('input new tag: ')
-                self.data[name].add_tag(tag)
-            else:
-                tag = input('input remove tag: ')
-                self.data[name].del_tag(tag)
-        else:
+        if not(name in self.data.keys()):
             raise ValueError(f'Note "{name}" not found')
 
-    def edit_note_text(self, name: str):
-        if name in self.data.keys():
-            print(self.data[name])
-            text_note = input('>')
-            flag = input('input add or overwrite text (a/o)')
-            self.data[name].edit_text_note(text_note, add_text=False) if flag == 'o' \
-                else self.data[name].edit_text_note(text_note)
-        else:
+    def edit_note_tag_add(self, name: str, tag: str):
+        self.data[name].add_tag(tag)
+        return f'Tag <{tag}> in note {name} added'
+
+    def edit_note_tag_del(self, name: str, tag: str):
+        self.data[name].del_tag(tag)
+        return f'Tag <{tag}> in note {name} deleted'
+
+    def edit_note_text(self, name: str, text_note: str, add_text: bool):
+        if not(name in self.data.keys()):
             raise ValueError(f'Note "{name}" not found')
+        self.data[name].edit_text_note(text_note, add_text=add_text)
+        return f'Text in note {name} changed'
 
     def find_note(self, find_text: str):
         find_result = []
@@ -141,23 +148,27 @@ class Notebook(UserDict):
         return f'Note with tag "{find_tag}" not found'
 
     def show_note(self):
+        result = ''
         for note in self.data.values():
-            print(note)
+            result += str(note) + '\n'
+        return result
 
     def show_note_by_tag(self):
-        result = {}
+        result = ''
+        result_dict = {}
         for note in self.data.values():
             if len(note.tags) == 0:
-                if not ('' in result.keys()):
-                    result[''] = []
-                result[''].append(f'"{note.name}"')
+                if not ('' in result_dict.keys()):
+                    result_dict[''] = []
+                result_dict[''].append(f'"{note.name}"')
             for tag in note.tags:
-                if not (tag in result.keys()):
-                    result[tag] = []
-                result[tag].append(f'"{note.name}"')
-        for key, value in result.items():
-            print(f'<{key}>: ' + ', '.join(value))
+                if not (tag in result_dict.keys()):
+                    result_dict[tag] = []
+                result_dict[tag].append(f'"{note.name}"')
+        for key, value in result_dict.items():
+            result += f'<{key}>: ' + ', '.join(value) + '\n'
+        return result
 
 
-this_notebook = Notebook()
+
 

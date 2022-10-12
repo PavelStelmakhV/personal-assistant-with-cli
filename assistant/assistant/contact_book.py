@@ -1,10 +1,7 @@
 from collections import UserDict
 from datetime import datetime, timedelta
-from pickle import load, dump
+import pickle
 from pathlib import Path
-
-
-FILE_NAME_2 = 'contacts_book.pickle'
 
 
 class Field:
@@ -117,26 +114,23 @@ class Record:
 
     def add_phone(self, phone: Phone):
         self.phone_list.append(phone)
-        return 'Phone added'
+        return 'Phone added.'
 
-    def change_phone(self, phone: Phone, index: int = 0):
+    def delete_phone(self, del_phone: Phone):
         try:
-            self.phone_list[index] = phone
-            return 'Number changed successfully'
-        except KeyError:
-            return f'In field {index} there is no phone number to change'
-
-    def delete_phone(self, phone: Phone):
-        try:
-            self.phone_list.remove(Phone)
+            for phone in self.phone_list:
+                if phone.value == del_phone.value:
+                    self.phone_list.remove(phone)
             return 'Number deleted successfully'
         except KeyError:
+            return f'In field {self.name.value} there is no phone number to delete'
+        except ValueError:
             return f'In field {self.name.value} there is no phone number to delete'
 
     def change_phone(self, old_phone: Phone, new_phone: Phone):
         try:
-            self.phone_list.remove(old_phone)
-            self.phone_list.append(new_phone)
+            self.delete_phone(old_phone)
+            self.add_phone(new_phone)
             return 'Number changed successfully'
         except KeyError:
             return f'In field {self.name.value} there is no phone number to delete'
@@ -146,12 +140,15 @@ class Record:
 
     def set_address(self, address: Address):
         self.address = address
+        return 'Address added.'
 
     def set_email(self, email: Email):
         self.email = email
+        return 'Email added.'
 
     def set_birthday(self, birthday: Birthday):
         self.birthday = birthday
+        return 'Birthday added.'
 
     def days_to_birthday(self) -> int:
         if self.birthday is None:
@@ -172,12 +169,20 @@ class Record:
 
 
 class AddressBook(UserDict):
-    def __init__(self, max_line: int = 3):
-        self.data = {}
-        self.find_result = []
-        self.max_line = max_line
-        self.current_value = 0
-        self.load_book()
+
+    __path = Path('~').expanduser()
+    __file_name = __path / 'contacts_book.pickle'
+    __items_per_page = 20
+
+    # def __init__(self):
+    #     self.data = {}
+
+    def __enter__(self):
+        self.__load_book()
+        return self
+
+    def __exit__(self, exc_type, exc_val, exc_tb):
+        self.__save_book()
 
     def iterator(self, max_line: int = 5):
         result = ''
@@ -192,9 +197,13 @@ class AddressBook(UserDict):
                 result = ''
                 count = 0
 
+    def save_book(self):
+        self.__save_book()
+
     def add_record(self, name: Name, phone: Phone = None):
         if not (name.value in self.data.keys()):
             self.data[name.value] = Record(name=name, phone=phone)
+
 
     def del_record(self, name: Name):
         try:
@@ -206,35 +215,15 @@ class AddressBook(UserDict):
         if not (name.value in self.data.keys()):
             raise ValueError('No record with that name')
 
-        command = input('Input field edit (phone/address/email/birthday): ')
-        if command == 'phone':
-            command_phone = 'input (add/del/change):'
-            phone = input('Input phone:')
-            if command_phone == 'add':
-                self.data[name.value].add_phone(Phone(phone))
-            elif command_phone == 'del':
-                self.data[name.value].delete_phone(Phone(phone))
-            elif command_phone == 'change':
-                new_phone = input('Input new phone: ')
-                self.data[name.value].change_phone(Phone(phone), Phone(new_phone))
-        elif command == 'email':
-            email = input('Input e-mail: ')
-            self.data[name.value].set_email(Email(email))
-        elif command == 'address':
-            address = input('Input address: ')
-            self.data[name.value].set_address(Address(address))
-        elif command == 'birthday':
-            birthday = input('Input birthday: ')
-            self.data[name.value].set_birthday(Birthday(birthday))
 
     def find_record(self, find_text: str):
-        self.find_result = []
+        find_result = []
         for record in self.data.values():  # type: Record
             # find by name or phones
-            if find_text in str(record.name.value) or bool(list(filter(lambda x: find_text in x.value, record.phone_list))):
-                self.find_result.append(record.name.value)
-        if len(self.find_result) > 0:
-            return f'Records where "{find_text}" were found: ' + ', '.join(self.find_result)
+            if find_text.lower() in str(record.name.value).lower() or bool(list(filter(lambda x: find_text in x.value, record.phone_list))):
+                find_result.append(record.name.value)
+        if len(find_result) > 0:
+            return f'Records where "{find_text}" were found: ' + ', '.join(find_result)
         return f'"{find_text}" matches not found'
 
     def show_record_with_birthday(self, day: int = 0):
@@ -246,23 +235,36 @@ class AddressBook(UserDict):
             return f'Birthday records in {day} days: ' + ', '.join(find_result)
         return f'no records with birthdays after {day} days'
 
-    def load_book(self):
-        path = Path('~').expanduser()
+    def __load_book(self):
         try:
-            with open(path / FILE_NAME_2, 'rb') as fh:
-                self.data = load(fh)
+            with open(self.__file_name, 'rb') as file:
+                book = pickle.load(file)
+                self.data.update(book)
         except FileNotFoundError:
             pass
 
-    def save_book(self):
-        path = Path('~').expanduser()
+    def __save_book(self):
         try:
-            with open(path / FILE_NAME_2, 'wb') as fh:
-                dump(self.data, fh)
+            with open(self.__file_name, 'wb') as file:
+                pickle.dump(self.data, file, protocol=pickle.HIGHEST_PROTOCOL)
         except Exception:
-            print("Some problems!")
+            print("Some problems! Don't save contact book")
 
 
-this_contacts_book = AddressBook()
+if __name__ == '__main__':
 
+    with AddressBook() as book:
 
+        if len(book) == 0:
+            print('Phone book is empty')
+        try:
+            max_line = 10
+        except ValueError:
+            max_line = len(book)
+        result = 'Phone book:\n'
+        num_page = 0
+        for page in book.iterator(max_line=max_line):
+            num_page += 1
+            result += f'<< page {num_page} >>\n' if max_line < len(book) else ''
+            result += page
+        print(result)
