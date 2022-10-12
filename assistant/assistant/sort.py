@@ -155,11 +155,12 @@ class SortFolder:
         return sub(r'\W', '_', string)
 
 
-    def sort_files(self, work_dir: str = None):
+    def sort_files(self, work_dir: str = ''):
 
         path = Path.cwd()
-        path = Path('D:\\temp')
-        if work_dir is not None:
+        # path = Path('D:\\temp')
+        if work_dir != '':
+            print(f'<{work_dir}>')
             path = Path(work_dir)
 
         if path.exists() and path.is_dir:

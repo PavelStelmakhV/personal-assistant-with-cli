@@ -6,8 +6,27 @@ import help
 from sort import SortFolder
 from parcer import Parsers
 from decorators import *
-
+from abc import ABC, abstractmethod
 from typing import Set
+
+class AbstractInputOutput(ABC):
+
+    @abstractmethod
+    def user_input(self, pre_input: str='') -> str:
+        pass
+
+    @abstractmethod
+    def user_output(self, text_output: str=''):
+        pass
+
+
+class CLIInputOutput(AbstractInputOutput):
+
+    def user_input(self, pre_input: str='') -> str:
+        return input(pre_input)
+
+    def user_output(self, text_output: str=''):
+        print(text_output)
 
 
 class InputOutput:
@@ -16,6 +35,7 @@ class InputOutput:
         self.notebook: note_book.Notebook = None
         self._sortfolder = SortFolder()
         self._parsers = Parsers()
+        self._io = CLIInputOutput()
 
     def hello_handler(self, *args) -> str:
         return 'How can I help you?'
@@ -26,7 +46,7 @@ class InputOutput:
 
     @command_handler
     def note_add_handler(self, argument: str) -> str:
-        input_text = input('Input text note:')
+        input_text = self._io.user_input('Input text note:')
         return self.notebook.add_note(argument, input_text)
 
     @command_handler
@@ -36,19 +56,19 @@ class InputOutput:
     @command_handler
     def note_edit_tag_handler(self, argument: str) -> str:
         self.notebook.edit_note_tag(argument)
-        flag = input('input add or delete tag (a/d)')
+        flag = self._io.user_input('input add or delete tag (a/d)')
         if flag == 'a':
-            tag = input('input new tag: ')
+            tag = self._io.user_input('input new tag: ')
             return self.notebook.edit_note_tag_add(argument, tag)
         else:
-            tag = input('input remove tag: ')
+            tag = self._io.user_input('input remove tag: ')
             return self.notebook.edit_note_tag_del(argument, tag)
 #<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
     @command_handler
     def note_edit_handler(self, name_note: str) -> str:
-        print(self.notebook[name_note])
-        text_note = input('>')
-        flag = input('input add or overwrite text (a/o)')
+        self._io.user_output(self.notebook[name_note])
+        text_note = self._io.user_input('>')
+        flag = self._io.user_input('input add or overwrite text (a/o)')
         if flag == 'a':
             add_text = True
         elif flag == 'o':
@@ -89,10 +109,10 @@ class InputOutput:
     def contact_edit_handler(self, argument: str) -> str:
         self.contactbook.edit_record(contact_book.Name(argument))
 
-        print('1. Add phone\n2. Delete phone\n3. Change phone\n4. Change address\n5. Change E-mail\n6. Change birthday')
-        num_choose = input('Choose a number: ')
+        self._io.user_output('1. Add phone\n2. Delete phone\n3. Change phone\n4. Change address\n5. Change E-mail\n6. Change birthday')
+        num_choose = self._io.user_input('Choose a number: ')
         operation_with_record =['_add_phone', '_del_phone', '_change_phone', '_add_address', '_add_email', '_add_birthday']
-        print(operation_with_record[int(num_choose)-1])
+        self._io.user_output(operation_with_record[int(num_choose)-1])
         command_function = getattr(self, operation_with_record[int(num_choose)-1])
         result = command_function(argument)
         self.contactbook.save_book()
@@ -100,36 +120,36 @@ class InputOutput:
     #--------------------------------------------
     @command_handler
     def _add_phone(self, argument: str) -> str:
-        num_phone = input('Input phone: ')
+        num_phone = self._io.user_input('Input phone: ')
         if num_phone is not None:
             return self.contactbook[contact_book.Name(argument).value].add_phone(contact_book.Phone(num_phone))
 
     @command_handler
     def _del_phone(self, argument: str) -> str:
-        num_phone = input('Enter phone number to delete: ')
+        num_phone = self._io.user_input('Enter phone number to delete: ')
         return self.contactbook[contact_book.Name(argument).value].delete_phone(contact_book.Phone(num_phone))
 
     @command_handler
     def _change_phone(self, argument: str) -> str:
-        change_phone = input('Enter phone number to change: ')
-        new_phone = input('Enter new phone: ')
+        change_phone = self._io.user_input('Enter phone number to change: ')
+        new_phone = self._io.user_input('Enter new phone: ')
         return self.contactbook[contact_book.Name(argument).value].change_phone(contact_book.Phone(change_phone), contact_book.Phone(new_phone))
 
     @command_handler
     def _add_address(self, argument: str) -> str:
-        address = input('Input address: ')
+        address = self._io.user_input('Input address: ')
         if address is not None:
             return self.contactbook[contact_book.Name(argument).value].set_address(contact_book.Address(address))
 
     @command_handler
     def _add_email(self, argument: str) -> str:
-        email = input('Input email: ')
+        email = self._io.user_input('Input email: ')
         if email is not None:
             return self.contactbook[contact_book.Name(argument).value].set_email(contact_book.Email(email))
 
     @command_handler
     def _add_birthday(self, argument: str) -> str:
-        birthday = input('Input birthday: ')
+        birthday = self._io.user_input('Input birthday: ')
         if birthday is not None:
             return self.contactbook[contact_book.Name(argument).value].set_birthday(contact_book.Birthday(birthday))
     #------------------------------------------------------------
@@ -182,20 +202,20 @@ class InputOutput:
 
     def loop_input_putput(self, command_line:str='Command', pre_command: str=''):
         while True:
-            user_input = input(f'{command_line}: ')
+            user_input = self._io.user_input(f'{command_line}: ')
 
             result = self._parsers.parse_user_input(user_input=user_input)
             if len(result) != 2:
-                print(result)
+                self._io.user_output(result)
                 continue
             command, argument = result
             command_function = getattr(self, command.replace(" ", "_") + "_handler")
 
             try:
                 command_response = command_function(argument)
-                print(command_response)
+                self._io.user_output(command_response)
             except SystemExit as e:
-                print(str(e))
+                self._io.user_output(str(e))
                 break
 
     def run(self):
