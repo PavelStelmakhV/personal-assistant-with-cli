@@ -71,11 +71,6 @@ class Notebook(UserDict):
     def save_book(self):
         self.__save_book()
 
-    # def __init__(self):
-    #     super().__init__()
-    #     self.data = {}
-    #     self.load_data()
-
     def __load_book(self):
         try:
             with open(self.__file_name, 'rb') as file:

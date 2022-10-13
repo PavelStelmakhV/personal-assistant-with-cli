@@ -174,9 +174,6 @@ class AddressBook(UserDict):
     __file_name = __path / 'contacts_book.pickle'
     __items_per_page = 20
 
-    # def __init__(self):
-    #     self.data = {}
-
     def __enter__(self):
         self.__load_book()
         return self

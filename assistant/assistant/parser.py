@@ -1,5 +1,5 @@
 from typing import List
-from decorators import *
+from assistant.decorators import *
 
 
 commands: List[str] = [
