@@ -1,13 +1,17 @@
 from typing import Dict, Callable
 from assistant import contact_book
-import contact_book
-import note_book
-import help
-from sort import SortFolder
-from parcer import Parsers
-from decorators import *
+from assistant import note_book
+from assistant import help
+from assistant import sort
+from assistant import parser
+# import contact_book
+# import note_book
+# import help
+# import sort
+# import parser
+from assistant.decorators import *
 from abc import ABC, abstractmethod
-from typing import Set
+import pickle
 
 class AbstractInputOutput(ABC):
 
@@ -33,8 +37,8 @@ class InputOutput:
     def __init__(self):
         self.contactbook: contact_book.AddressBook = None
         self.notebook: note_book.Notebook = None
-        self._sortfolder = SortFolder()
-        self._parsers = Parsers()
+        self._sortfolder = sort.SortFolder()
+        self._parsers = parser.Parsers()
         self._io = CLIInputOutput()
 
     def hello_handler(self, *args) -> str:
