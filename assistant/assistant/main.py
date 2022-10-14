@@ -39,6 +39,7 @@ class InputOutput:
         self.notebook: note_book.Notebook = None
         self._sortfolder = sort.SortFolder()
         self._parsers = parser.Parsers()
+        self._help = help.Help()
         self._io = CLIInputOutput()
 
     def hello_handler(self, *args) -> str:
@@ -196,7 +197,7 @@ class InputOutput:
 
     @command_handler
     def help_handler(self, *args):
-        return help.show_commands()
+        return self._help.show()
 
     def setup_phonebook(self, phonebook):
         self.contactbook = phonebook
