@@ -205,9 +205,9 @@ class InputOutput:
     def setup_notebook(self, notebook):
         self.notebook = notebook
 
-    def loop_input_putput(self, command_line:str='Command', pre_command: str=''):
+    def loop_input_output(self):
         while True:
-            user_input = self._io.user_input(f'{command_line}: ')
+            user_input = self._io.user_input('Command: ')
 
             result = self._parsers.parse_user_input(user_input=user_input)
             if len(result) != 2:
@@ -229,7 +229,7 @@ class InputOutput:
             self.setup_phonebook(phonebook)
             with note_book.Notebook() as notebook:
                 self.setup_notebook(notebook)
-                self.loop_input_putput()
+                self.loop_input_output()
 
 
 def main():
