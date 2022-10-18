@@ -39,7 +39,8 @@ class InputOutput:
         self.notebook: note_book.Notebook = None
         self._sortfolder = sort.SortFolder()
         self._parsers = parser.Parsers()
-        self._io = CLIInputOutput()
+        self._help = help.Help()
+        self._io: AbstractInputOutput = CLIInputOutput()
 
     def hello_handler(self, *args) -> str:
         return 'How can I help you?'
@@ -196,7 +197,7 @@ class InputOutput:
 
     @command_handler
     def help_handler(self, *args):
-        return help.show_commands()
+        return self._help.show()
 
     def setup_phonebook(self, phonebook):
         self.contactbook = phonebook
@@ -204,9 +205,9 @@ class InputOutput:
     def setup_notebook(self, notebook):
         self.notebook = notebook
 
-    def loop_input_putput(self, command_line:str='Command', pre_command: str=''):
+    def loop_input_output(self):
         while True:
-            user_input = self._io.user_input(f'{command_line}: ')
+            user_input = self._io.user_input('Command: ')
 
             result = self._parsers.parse_user_input(user_input=user_input)
             if len(result) != 2:
@@ -228,7 +229,7 @@ class InputOutput:
             self.setup_phonebook(phonebook)
             with note_book.Notebook() as notebook:
                 self.setup_notebook(notebook)
-                self.loop_input_putput()
+                self.loop_input_output()
 
 
 def main():
