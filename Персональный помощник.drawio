@@ -1,4 +1,4 @@
-<mxfile host="app.diagrams.net" modified="2022-10-18T21:04:29.694Z" agent="5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/106.0.0.0 Safari/537.36" etag="Dw_mpyDHya1xOcap7PAz" version="20.4.1" type="github">
+<mxfile host="app.diagrams.net" modified="2022-10-18T21:38:44.001Z" agent="5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/106.0.0.0 Safari/537.36" etag="Glq31Z4ARuX7ix-h5iZJ" version="20.4.1" type="github">
   <diagram id="C5RBs43oDa-KdzZeNtuy" name="Page-1">
     <mxGraphModel dx="1336" dy="802" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1169" pageHeight="1654" background="#ffffff" math="0" shadow="1">
       <root>
@@ -228,16 +228,16 @@
           <mxGeometry relative="1" as="geometry" />
         </mxCell>
         <mxCell id="_s7rSfz18poYZKIc188B-37" value="InputOutput" style="swimlane;fontStyle=1;align=center;verticalAlign=top;childLayout=stackLayout;horizontal=1;startSize=26;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=1;marginBottom=0;" parent="WIyWlLk6GJQsqaUBKTNV-1" vertex="1">
-          <mxGeometry x="70" y="790" width="160" height="370" as="geometry" />
+          <mxGeometry x="5" y="650" width="230" height="540" as="geometry" />
         </mxCell>
         <mxCell id="_s7rSfz18poYZKIc188B-38" value="+ contacbook: AdressBook&#xa;+ notebook: Notebook&#xa;+ _sortfolder: SortFolder&#xa;+ _parsers: Parsers&#xa;+ _help: Help&#xa;+ _io: AbstractInputOutput" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;" parent="_s7rSfz18poYZKIc188B-37" vertex="1">
-          <mxGeometry y="26" width="160" height="94" as="geometry" />
+          <mxGeometry y="26" width="230" height="94" as="geometry" />
         </mxCell>
         <mxCell id="_s7rSfz18poYZKIc188B-39" value="" style="line;strokeWidth=1;fillColor=none;align=left;verticalAlign=middle;spacingTop=-1;spacingLeft=3;spacingRight=3;rotatable=0;labelPosition=right;points=[];portConstraint=eastwest;strokeColor=inherit;" parent="_s7rSfz18poYZKIc188B-37" vertex="1">
-          <mxGeometry y="120" width="160" height="8" as="geometry" />
+          <mxGeometry y="120" width="230" height="8" as="geometry" />
         </mxCell>
-        <mxCell id="_s7rSfz18poYZKIc188B-40" value="+ hello_handler(): str&#xa;+ exit_handler()&#xa;" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;" parent="_s7rSfz18poYZKIc188B-37" vertex="1">
-          <mxGeometry y="128" width="160" height="242" as="geometry" />
+        <mxCell id="_s7rSfz18poYZKIc188B-40" value="+ hello_handler(): str&#xa;+ exit_handler()&#xa;+ note_add_handler(str): str&#xa;+ note_del_handler(str): str&#xa;+ note_edit_tag_handler(str): str&#xa;+ note_edit_handler(str): str&#xa;+ note_find_by_tag_handler(str): str&#xa;+ note_find_handler(str): str&#xa;+ note_show_by_tag_handler(str): str&#xa;+ note_show_handler(str): str&#xa;+ contact_add_handler(str): str&#xa;+ contact_edit_handler(str): str&#xa;+ contact_del_handler(str): str&#xa;+ contact_find_handler(str): str&#xa;+ contact_show_handler(str): str&#xa;+ contact_birthday_handler(str): str&#xa;+ sort_file_handler(str): str&#xa;+ help_handler(str):str&#xa;+ setup_phonebook(AdressBook)&#xa;+ setup_notebook(Notebook)&#xa;+ loop_input_output()&#xa;+ run()&#xa;- _add_phone(str): str&#xa;- _del_phone(str): str&#xa;- _change_phone(str): str&#xa;- _add_address(str): str&#xa;- _add_email(str):str&#xa;- _add_birthday(str): str" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;" parent="_s7rSfz18poYZKIc188B-37" vertex="1">
+          <mxGeometry y="128" width="230" height="412" as="geometry" />
         </mxCell>
         <mxCell id="rsv80AppgMQCgHoHrhx7-1" value="use" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0;entryY=0.25;entryDx=0;entryDy=0;dashed=1;exitX=1.007;exitY=0.879;exitDx=0;exitDy=0;exitPerimeter=0;" parent="WIyWlLk6GJQsqaUBKTNV-1" source="_s7rSfz18poYZKIc188B-38" target="_s7rSfz18poYZKIc188B-31" edge="1">
           <mxGeometry relative="1" as="geometry">
