@@ -3,9 +3,6 @@ import pickle
 from pathlib import Path
 
 
-
-
-
 class Note:
     def __init__(self, name: str, text_note: str = None):
         self.__name = None
@@ -163,7 +160,3 @@ class Notebook(UserDict):
         for key, value in result_dict.items():
             result += f'<{key}>: ' + ', '.join(value) + '\n'
         return result
-
-
-
-

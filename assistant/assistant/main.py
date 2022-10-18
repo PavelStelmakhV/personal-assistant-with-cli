@@ -40,7 +40,7 @@ class InputOutput:
         self._sortfolder = sort.SortFolder()
         self._parsers = parser.Parsers()
         self._help = help.Help()
-        self._io = CLIInputOutput()
+        self._io: AbstractInputOutput = CLIInputOutput()
 
     def hello_handler(self, *args) -> str:
         return 'How can I help you?'

@@ -2,39 +2,39 @@ from typing import List
 from assistant.decorators import *
 
 
-commands: List[str] = [
-    'hello',
-    'close',
-    'good bye',
-    'exit',
-
-    'note add',
-    'note del',
-    'note edit tag',
-    'note edit',
-    'note find by tag',
-    'note find',
-    'note show by tag',
-    'note show',
-
-    'contact add',
-    'contact edit',
-    'contact del',
-    'contact find',
-    'contact show',
-
-    'contact birthday',
-
-    'sort file',
-    'help'
-]
-
-
 class Parsers:
+
+    __commands: List[str] = [
+        'hello',
+        'close',
+        'good bye',
+        'exit',
+
+        'note add',
+        'note del',
+        'note edit tag',
+        'note edit',
+        'note find by tag',
+        'note find',
+        'note show by tag',
+        'note show',
+
+        'contact add',
+        'contact edit',
+        'contact del',
+        'contact find',
+        'contact show',
+
+        'contact birthday',
+
+        'sort file',
+        'help'
+    ]
+
     @parser_handler
     def parse_user_input(self, user_input: str) -> tuple[str, str]:
         user_input_list = user_input.split(' ')
-        for command in commands:
+        for command in self.__commands:
             command_list = command.split(' ')
             if command == ' '.join(user_input_list[:len(command_list):]).lower():
                 parser = getattr(self, '_' + command.replace(' ', '_'))
