@@ -1,5 +1,6 @@
 from typing import List
-from assistant.decorators import *
+from decorators import *
+# from assistant.decorators import *
 
 
 class Parsers:
@@ -39,89 +40,111 @@ class Parsers:
             if command == ' '.join(user_input_list[:len(command_list):]).lower():
                 parser = getattr(self, '_' + command.replace(' ', '_'))
                 return parser(' '.join(user_input_list[len(command_list)::]))
-
         raise ValueError("Unknown command!")
 
-    def _hello(self, user_input: str):
+    @staticmethod
+    def _hello(user_input: str):
         return 'hello', ''
 
-    def _close(self, user_input: str):
+    @staticmethod
+    def _close(user_input: str):
         return 'exit', ''
 
-    def _good_bye(self, user_input: str):
+    @staticmethod
+    def _good_bye(user_input: str):
         return 'exit', ''
 
-    def _exit(self, user_input: str):
+    @staticmethod
+    def _exit(user_input: str):
         return 'exit', ''
-    #--------------- N O T E --------------------
-    def _note_add(self, note_name: str):
+    # --------------- N O T E --------------------
+
+    @staticmethod
+    def _note_add(note_name: str):
         if note_name == '':
             raise ValueError("Bad input")
         else:
             return "note add", note_name
 
-    def _note_del(self, note_name: str):
+    @staticmethod
+    def _note_del(note_name: str):
         if note_name == '':
             raise ValueError("Bad input")
         else:
             return "note del", note_name
 
-    def _note_edit_tag(self, note_name: str):
+    @staticmethod
+    def _note_edit_tag(note_name: str):
         if note_name == '':
             raise ValueError("Bad input")
         else:
             return "note edit tag", note_name
 
-    def _note_edit(self, note_name: str):
+    @staticmethod
+    def _note_edit(note_name: str):
         if note_name == '':
             raise ValueError("Bad input")
         else:
             return "note edit", note_name
 
-    def _note_find_by_tag(self, user_input: str):
+    @staticmethod
+    def _note_find_by_tag(user_input: str):
         return "note find by tag", user_input
 
-    def _note_find(self, user_input: str):
+    @staticmethod
+    def _note_find(user_input: str):
         return "note find", user_input
 
-    def _note_show_by_tag(self, user_input: str):
+    @staticmethod
+    def _note_show_by_tag(user_input: str):
         return "note show by tag", user_input
 
-    def _note_show(self, user_input: str):
-        return "note show", []
-    #-------------- C O N T A C T ---------------------
-    def _contact_add(self, username: str):
+    @staticmethod
+    def _note_show(user_input: str):
+        return "note show", ''
+
+    # -------------- C O N T A C T ---------------------
+
+    @staticmethod
+    def _contact_add(username: str):
         if username == '':
             raise ValueError("Bad input")
         else:
             return "contact add", username
 
-    def _contact_edit(self, username: str):
+    @staticmethod
+    def _contact_edit(username: str):
         if username == '':
             raise ValueError("Bad input")
         else:
             return "contact edit", username
 
-    def _contact_del(self, username: str):
+    @staticmethod
+    def _contact_del(username: str):
         if username == '':
             raise ValueError("Bad input")
         else:
             return "contact del", username
 
-    def _contact_find(self, username: str):
+    @staticmethod
+    def _contact_find(username: str):
         if username == '':
             raise ValueError("Bad input")
         else:
             return "contact find", username
 
-    def _contact_show(self, user_input: str):
+    @staticmethod
+    def _contact_show(user_input: str):
         return "contact show", ''
 
-    def _contact_birthday(self, user_input: str):
+    @staticmethod
+    def _contact_birthday(user_input: str):
         return "contact birthday", user_input
 
-    def _sort_file(self, user_input: str):
+    @staticmethod
+    def _sort_file(user_input: str):
         return "sort file", user_input
 
-    def _help(self, user_input: str):
-        return "help", []
+    @staticmethod
+    def _help(user_input: str):
+        return "help", ''
