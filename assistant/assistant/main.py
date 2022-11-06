@@ -1,35 +1,38 @@
-from typing import Dict, Callable
-from assistant import contact_book
-from assistant import note_book
-from assistant import help
-from assistant import sort
-from assistant import parser
-# import contact_book
-# import note_book
-# import help
-# import sort
-# import parser
-from assistant.decorators import *
+# from assistant import contact_book
+# from assistant import note_book
+# from assistant import help
+# from assistant import sort
+# from assistant import parser
+# from assistant.decorators import *
+
+import contact_book
+import note_book
+import help
+import sort
+import parser
+from decorators import *
+
 from abc import ABC, abstractmethod
-import pickle
+
 
 class AbstractInputOutput(ABC):
 
     @abstractmethod
-    def user_input(self, pre_input: str='') -> str:
+    def user_input(self, pre_input: str = '') -> str:
         pass
 
     @abstractmethod
-    def user_output(self, text_output: str=''):
+    def user_output(self, text_output: str = ''):
         pass
 
 
 class CLIInputOutput(AbstractInputOutput):
 
-    def user_input(self, pre_input: str='') -> str:
-        return input(pre_input)
+    def user_input(self, pre_input: str = '') -> str:
+        result = input(f'{pre_input}')
+        return result
 
-    def user_output(self, text_output: str=''):
+    def user_output(self, text_output: str = ''):
         print(text_output)
 
 
@@ -42,6 +45,7 @@ class InputOutput:
         self._help = help.Help()
         self._io: AbstractInputOutput = CLIInputOutput()
 
+    @command_handler
     def hello_handler(self, *args) -> str:
         return 'How can I help you?'
 
@@ -68,7 +72,8 @@ class InputOutput:
         else:
             tag = self._io.user_input('input remove tag: ')
             return self.notebook.edit_note_tag_del(argument, tag)
-#<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
+# <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
+
     @command_handler
     def note_edit_handler(self, name_note: str) -> str:
         self._io.user_output(self.notebook[name_note])
@@ -96,6 +101,7 @@ class InputOutput:
     def note_show_handler(self, argument: str) -> str:
         return self.notebook.show_note()
     # -------------------------------------------------
+
     @command_handler
     def contact_add_handler(self, argument: str) -> str:
         result = []
@@ -109,7 +115,6 @@ class InputOutput:
         self.contactbook.save_book()
         return ' '.join(result)
 
-
     @command_handler
     def contact_edit_handler(self, argument: str) -> str:
         self.contactbook.edit_record(contact_book.Name(argument))
@@ -122,7 +127,8 @@ class InputOutput:
         result = command_function(argument)
         self.contactbook.save_book()
         return f'Edited record {argument}. {result}'
-    #--------------------------------------------
+    # --------------------------------------------
+
     @command_handler
     def _add_phone(self, argument: str) -> str:
         num_phone = self._io.user_input('Input phone: ')
@@ -157,7 +163,7 @@ class InputOutput:
         birthday = self._io.user_input('Input birthday: ')
         if birthday is not None:
             return self.contactbook[contact_book.Name(argument).value].set_birthday(contact_book.Birthday(birthday))
-    #------------------------------------------------------------
+    # ------------------------------------------------------------
 
     @command_handler
     def contact_del_handler(self, argument: str) -> str:
@@ -165,11 +171,9 @@ class InputOutput:
         self.contactbook.save_book()
         return f'Deleted record {argument}'
 
-
     @command_handler
     def contact_find_handler(self, argument: str) -> str:
         return self.contactbook.find_record(argument)
-
 
     @command_handler
     def contact_show_handler(self, *args) -> str:
